@@ -6,19 +6,46 @@
 
 .nav-link > span {
     padding: 16px 0px 16px 8px;
-    font-weight: bolder;
 }
 
 .nav-link > img{
-	width: 40px;
-	height:40px;
+	max-width: 26px;
+	max-height: 26px;
+    margin-right: 8px;
 }
 
 .nav-item > .dropdown-menu li > a {
 	padding: 8px 16px;
+	color: black !important;
+	display: block;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+.nav-item > .dropdown-menu li > a:hover {
+	text-decoration: none;
+	background: #f3f3f3;
 }
 .nav-item > .dropdown-menu i {
 	width: 24px;
 	position: relative;
 	top: 2px;
 } 
+.form-check-radio input[type="radio"]:checked + .form-check-sign:after{
+	width: 8px !important;
+    height: 8px !important;
+    background-color: #555555;
+    border-color: #555555;
+    top: 9px !important;
+    left: 9px !important;
+}
+.form-check-radio input[type="radio"]:checked + .form-check-sign.form-check-sign-dark:after {
+    background-color: #fff !important;
+    border-color: #fff !important;
+}
+.form-check-radio input[type="radio"] {
+	width: 0;
+	height: 0;
+}
+.form-check-label {
+	padding-left: 25px !important;
+}

@@ -17,8 +17,11 @@ The above copyright notice and this permission notice shall be included in all c
     <link rel="apple-touch-icon" sizes="76x76" href="<?=site_url('assets/material-dashboard-master')?>/img/apple-icon.png">
     <link rel="icon" type="image/png" href="<?=site_url('assets/material-dashboard-master')?>/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!-- ----------------------------------------------------------------------- 
+        Lihat section (2) dan section (5)
+    ------------------------------------------------------------------------------- -->
     <title>
-        Material Dashboard by Creative Tim
+        <?=((isset($ui_title) ? $ui_title : '(ui_title) : Tidak ada Judul'))?> <?=((isset($ui_brand) ? $ui_brand : '(ui_title) : Tidak ada Judul'))?>
     </title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     <!--     Fonts and icons     -->
