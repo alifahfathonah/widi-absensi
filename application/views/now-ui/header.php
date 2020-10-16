@@ -153,16 +153,16 @@
                             <!------------------------------------------------------------ -->                   
                             <!-- SYSTEM DATABASE : Logged User data
                                     * atribut data yang dibutuhkan adalah Nama lengkap dan avatar/foto profil dari user 
-                                    * nama lengkap di representasikan dengan    : $logged_user->nama 
+                                    * nama_lengkap lengkap di representasikan dengan    : $logged_user->nama_lengkap 
                                     * Avatar di representasikan dengan          : $logged_user->avatar 
                                     * Rubah variabel tersebut jika dibutuhkan 
                                 contoh data: 
                                 $logged_user = new stdClass();
-                                $logged_user->nama = 'Badar Wildanie';
+                                $logged_user->nama_lengkap = 'Badar Wildanie';
                                 $logged_user->avatar = 'assets/custom/images/user/Annotation 2020-04-02 2208172.png';
                             ------------------------------------------------------------- -->
                             <img class="rounded-circle" src="<?=site_url(((isset($logged_user->avatar) && $logged_user->avatar != '') ? $logged_user->avatar : 'assets/custom/images/img_unavailable.png'))?>">
-                            <span><?=((isset($logged_user->nama) && $logged_user->nama != '') ? $logged_user->nama : 'Login')?></span>
+                            <span><?=((isset($logged_user->nama_lengkap) && $logged_user->nama_lengkap != '') ? $logged_user->nama_lengkap : 'Login')?></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right p-0">
                             <?php  

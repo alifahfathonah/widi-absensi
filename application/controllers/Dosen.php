@@ -44,35 +44,72 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dosen extends CI_Controller {
 
+	public $sidebar_item;
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->sidebar_item = array(
+			'Beranda|fas fa-tachometer-alt|' . site_url('dosen/beranda'),
+			'Kelas Anda|fas fa-chalkboard-teacher|' . site_url('dosen/kelas'),
+			'Absensi|fas fa-tasks|' . site_url('dosen/absen'),
+			'Penilaian|fas fa-signature|' . site_url('dosen/penilaian'),
+			'E-Book|fas fa-book|' . site_url('dosen/ebook'),
+		);
+	}
+
+	public function cek_login()
+	{
+		$logged_username = get_cookie('logged_username');
+		$logged_role = get_cookie('logged_role');
+		// die;
+		if ($logged_role == 'administrator') {
+			$this->load->model('AdminModel');
+			$user_db = $this->AdminModel->single('username', $logged_username, 'object');
+		}
+		else if ($logged_role == 'mahasiswa') {
+			$this->load->model('Mahasiswa');
+			$user_db = $this->MahasiswaModel->single('username', $logged_username, 'object');
+		}
+		else if ($logged_role == 'dosen') {
+			$this->load->model('DosenModel');
+			$user_db = $this->DosenModel->single('username', $logged_username, 'object');
+		}
+		else {
+			delete_cookie('logged_username');
+			delete_cookie('logged_role');
+            header('location:' .site_url('auth/login?notif=yes&type=danger&msg=Sepertinya anda belum Login'));
+            die;
+        }
+
+        if ($user_db != '') {
+            // user ditemukan
+            return $user_db;
+        }
+        else {
+            // user tidak ditemukan
+            delete_cookie('logged_username');
+            delete_cookie('logged_role');
+            header('location:' .site_url('auth/login?notif=yes&type=danger&msg=Sepertinya anda belum login'));
+        }
+	}
+
 	public function index()
 	{
 		$data = array(
-			'ui_jumbotron_enable' => true,
-
 			'ui_css' => array(),
 			'ui_title' => 'PerpusApp',
-			'ui_sidebar_item' => array(
-				'Beranda|fas fa-home|' . site_url('beranda'),
-				'Buku Induk|fas fa-database|' . site_url('bukuinduk'),
-				'Data Siswa|fas fa-users|' . site_url('siswa'),
-				'Peminjaman|fas fa-handshake|' . site_url('peminjaman'),
-				'Laporan|fas fa-clipboard-list|' . site_url('laporan')
-			),
-			'ui_sidebar_active' => 'Data Siswa',
-			'ui_brand' => 'Data Siswa',
-			'ui_nav_item' => array(
-				'Tambah data|fas fa-plus-circle|' . site_url('siswa/tambah'),
-			),
+			'ui_sidebar_item' => $this->sidebar_item,
+			'ui_sidebar_active' => 'Beranda',
+			'ui_brand' => 'Beranda',
+			'ui_nav_item' => array(),
 			'ui_nav_active' => 'Tambah data',
 			'ui_js' => array(),
 		);
 
-		// $data['logged_user'] = new stdClass();
-  //       $data['logged_user']->nama = 'Badar Wildanie';
-  //       $data['logged_user']->avatar = 'assets/custom/images/user/Annotation 2020-04-02 2208172.png';
-
+		$data['logged_user'] = $this->cek_login();
         
-		$this->load->view('now-ui/header', $data);	
+		$this->load->view('dosen/kelas', $data);	
 	}
 
 

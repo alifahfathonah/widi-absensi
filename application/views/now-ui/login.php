@@ -69,7 +69,7 @@
 											<i class="now-ui-icons users_circle-08"></i>
 										</span>
 									</div>
-									<input type="text" class="form-control" placeholder="Username">
+									<input type="text" class="form-control" placeholder="Username" name="username">
 								</div>
 								<div class="input-group mb-2 no-border input-lg">
 									<div class="input-group-prepend">
@@ -77,19 +77,19 @@
 											<i class="now-ui-icons ui-1_lock-circle-open"></i>
 										</span>
 									</div>
-									<input type="text" placeholder="Password" class="form-control" />
+									<input type="text" placeholder="Password" class="form-control" name="password" />
 								</div>
 								<div class="form-group">
 									<div class="form-check form-check-radio form-check-inline">
 										<label class="form-check-label">
-											<input type="radio" name="login_sebagai" class="form-check-input" value="mahasiswa" checked="true">
+											<input type="radio" name="login_sebagai" class="form-check-input" value="mahasiswa">
 											<span class="form-check-sign form-check-sign-dark"></span>
 											Mahasiswa
 										</label>
 									</div>
 									<div class="form-check form-check-radio form-check-inline">
 										<label class="form-check-label">
-											<input type="radio" name="login_sebagai" class="form-check-input" value="dosen">
+											<input type="radio" name="login_sebagai" class="form-check-input" value="dosen" checked="true">
 											<span class="form-check-sign form-check-sign-dark"></span>
 											Dosen
 										</label>
@@ -106,6 +106,8 @@
 							</div>
 							<div class="card-footer text-center">
 								<input type="submit" class="btn btn-primary btn-round btn-lg btn-block" value="Login"/>
+								<span class="form-text text-<?=$this->input->get('type')?> font-italic"><?=$this->input->get('msg')?></span>
+							</div>
 							</form>
 						</div>
 					</div>

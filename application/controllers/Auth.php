@@ -62,6 +62,53 @@ class Auth extends CI_Controller {
 	}
 
 
+    public function do_login()
+    {
+        $username = $this->input->post('username');
+        $password = $this->input->post('password');
+        $login_sebagai = $this->input->post('login_sebagai');
+
+        $redirect_url = '';
+        if ($login_sebagai == 'mahasiswa') {
+            $this->load->model('MahasiswaModel');
+            $user_db = $this->MahasiswaModel->single('username', $username, 'object');
+            $redirect_url = site_url('mahasiswa/index');
+        }
+        else if ($login_sebagai == 'dosen') {
+            $this->load->model('DosenModel');
+            $user_db = $this->DosenModel->single('username', $username, 'object');
+            $redirect_url = site_url('dosen/index');
+        }
+        else if ($login_sebagai == 'administrator') {
+            $this->load->model('AdminModel');
+            $user_db = $this->AdminModel->single('username', $username, 'object');
+            $redirect_url = site_url('admin/data');
+        }
+        else {
+            header('location:' .site_url('auth/login?notif=yes&type=danger&msg=Input tidak valid'));
+            die;
+        }
+
+        if ($user_db != '') {
+            // user ditemukan
+            if ($user_db->password == $password) {
+                // password cocok
+                set_cookie('logged_username', $user_db->username, 3600 * 24);
+                set_cookie('logged_role', $login_sebagai, 3600 * 24);
+                redirect($redirect_url, 'refresh');
+            }
+            else {
+                // Password tidak cocok
+                header('location:' .site_url('auth/login?notif=yes&type=danger&msg=Password tidak cocok'));
+            }
+        }
+        else {
+            // user tidak ditemukan
+            header('location:' .site_url('auth/login?notif=yes&type=danger&msg=User tidak ditemukan'));
+        }
+    }
+
+
 }
 	
 /* End of file Auth.php */
