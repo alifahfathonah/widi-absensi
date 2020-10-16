@@ -42,9 +42,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  ------------------------------------------------------------------------------------- */
 
 
-class Siswa extends CI_Controller {
+class Admin extends CI_Controller {
 
-	public function index()
+	public function data()
 	{
 		$data = array(
 			'ui_css' => array(),
@@ -68,7 +68,9 @@ class Siswa extends CI_Controller {
 		$data['logged_user'] = new stdClass();
         $data['logged_user']->nama = 'Badar Wildanie';
         $data['logged_user']->avatar = 'assets/custom/images/user/Annotation 2020-04-02 2208172.png';
-		$this->load->view('siswa/list', $data);	
+
+        
+		$this->load->view('admin/data/mahasiswa/list', $data);	
 	}
 
 
