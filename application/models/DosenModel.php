@@ -49,13 +49,13 @@ class DosenModel extends CI_Model {
 
 	public function update($data, $id)
 	{
-		return $this->db->update($this->table, $data, array('nis' => $id));
+		return $this->db->update($this->table, $data, array('id' => $id));
 	}
 
 
 	public function delete($id)
 	{
-		return $this->db->delete($this->table, array('nis' => $id));
+		return $this->db->delete($this->table, array('id' => $id));
 	}
 	
 

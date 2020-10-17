@@ -1,9 +1,9 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class MahasiswaModel extends CI_Model {
+class KelasModel extends CI_Model {
 
-	public $table = 'mahasiswa';
+	public $table = 'kelas';
 
 	public function show($limit, $offset, $tipe)
 	{
@@ -61,6 +61,6 @@ class MahasiswaModel extends CI_Model {
 
 }
 
-/* End of file MahasiswaModel.php */
-/* Location: ./application/models/MahasiswaModel.php */
+/* End of file KelasModel.php */
+/* Location: ./application/models/KelasModel.php */
 ?>

@@ -50,9 +50,9 @@ class Dosen extends CI_Controller {
 	{
 		parent::__construct();
 		$this->sidebar_item = array(
-			'Beranda|fas fa-tachometer-alt|' . site_url('dosen/beranda'),
+			'Beranda|fas fa-tachometer-alt|' . site_url('dosen/'),
 			'Kelas Anda|fas fa-chalkboard-teacher|' . site_url('dosen/kelas'),
-			'Absensi|fas fa-tasks|' . site_url('dosen/absen'),
+			'Absensi|fas fa-tasks|' . site_url('dosen/absensi'),
 			'Penilaian|fas fa-signature|' . site_url('dosen/penilaian'),
 			'E-Book|fas fa-book|' . site_url('dosen/ebook'),
 		);
@@ -98,7 +98,7 @@ class Dosen extends CI_Controller {
 	{
 		$data = array(
 			'ui_css' => array(),
-			'ui_title' => 'PerpusApp',
+			'ui_title' => 'STIKI E-Learning',
 			'ui_sidebar_item' => $this->sidebar_item,
 			'ui_sidebar_active' => 'Beranda',
 			'ui_brand' => 'Beranda',
@@ -109,9 +109,111 @@ class Dosen extends CI_Controller {
 
 		$data['logged_user'] = $this->cek_login();
         
+		$this->load->view('dosen/beranda', $data);	
+	}
+
+
+
+
+	public function kelas()
+	{
+		$data = array(
+			'ui_css' => array(),
+			'ui_title' => 'STIKI E-Learning',
+			'ui_sidebar_item' => $this->sidebar_item,
+			'ui_sidebar_active' => 'Kelas Anda',
+			'ui_brand' => 'Kelas Anda',
+			'ui_nav_item' => array(),
+			'ui_nav_active' => 'Tambah data',
+			'ui_js' => array(),
+		);
+
+		$data['logged_user'] = $this->cek_login();
+        
 		$this->load->view('dosen/kelas', $data);	
 	}
 
+
+	public function absensi()
+	{
+		$data = array(
+			'ui_css' => array(),
+			'ui_title' => 'STIKI E-Learning',
+			'ui_sidebar_item' => $this->sidebar_item,
+			'ui_sidebar_active' => 'Absensi',
+			'ui_brand' => 'Absensi',
+			'ui_nav_item' => array(),
+			'ui_nav_active' => 'Tambah data',
+			'ui_js' => array(),
+		);
+
+		$data['logged_user'] = $this->cek_login();
+        
+        $this->load->model('KelasModel');
+        $this->load->model('ProgramStudiModel');
+
+        $this->db->where('dosen_pengajar_id', $data['logged_user']->id);
+        $data['data_kelas'] = $this->KelasModel->show(-1, 0, 'object');
+		$this->load->view('dosen/absensi/absensi', $data);	
+	}
+
+	public function ajax_daftar_absensi()
+	{
+		$this->load->model('RAmbilKelasModel');
+		$this->load->model('AbsensiModel');
+		$data['limit'] = $this->input->get('limit');
+		$data['page'] = $this->input->get('page');
+		$data['offset'] = $data['limit'] * ($data['page'] - 1);
+
+		$this->db->start_cache();
+		$this->db->stop_cache();
+
+		$this->db->order_by('nama_lengkap', 'asc');
+		$this->db->where('kelas_id', $this->input->get('kelas'));
+
+		$data['tanggal'] = $this->input->get('tanggal');  // Untuk query where absensi
+		$data['data_filtered'] = $this->RAmbilKelasModel->join_mahasiswa($data['limit'], $data['offset'], 'object');
+		$data['data_filtered_count'] = $this->RAmbilKelasModel->join_mahasiswa($data['limit'], $data['offset'], 'count');
+		$this->db->flush_cache();
+
+		$this->load->view('dosen/absensi/ajax_tr_daftar_absensi', $data);
+
+	}
+
+
+	public function ajax_set_absensi()
+	{
+		$mahasiswa_ambil_kelas_id = $this->input->post('mahasiswa_ambil_kelas_id');
+		$tanggal = $this->input->post('tanggal');
+		$absen = $this->input->post('absen');
+		$kelas_id = $this->input->post('kelas_id');
+		$dosen_id = $this->input->post('dosen_id');
+
+		// Cek apakah sudah ada data absensi
+		$this->load->model('AbsensiModel');
+		$this->load->model('RAmbilKelasModel');
+		$this->db->where('tanggal', $tanggal);
+		$absensi = $this->AbsensiModel->single('mahasiswa_ambil_kelas_id', $mahasiswa_ambil_kelas_id, 'object');
+
+		if ($absensi != '') {
+			// Sudah ada data (maka dilakukan update)
+			$this->AbsensiModel->update(array('absen' => $absen), $absensi->id);
+		}
+		else {
+			$data_insert = array(
+				'kelas_id' => $kelas_id,
+				'dosen_id' => $dosen_id,
+				'mahasiswa_ambil_kelas_id' => $mahasiswa_ambil_kelas_id,
+				'absen' => $absen,
+				'keterangan' => '',
+				'tanggal' => $tanggal,
+				'waktu' => date('H:i:s')
+			);
+			$this->AbsensiModel->insert($data_insert);
+		}
+
+		echo json_encode(array('status' => 'ok'));
+	}
 
 
 	public function ajax_daftar_siswa()
@@ -168,7 +270,7 @@ class Dosen extends CI_Controller {
 		else {
 			$data = array(
 				'ui_css' => array(),
-				'ui_title' => 'PerpusApp',
+				'ui_title' => 'STIKI E-Learning',
 				'ui_sidebar_item' => array(
 					'Beranda|fas fa-home|' . site_url('beranda'),
 					'Buku Induk|fas fa-database|' . site_url('bukuinduk'),
@@ -221,7 +323,7 @@ class Dosen extends CI_Controller {
 		else {
 			$data = array(
 				'ui_css' => array(),
-				'ui_title' => 'PerpusApp',
+				'ui_title' => 'STIKI E-Learning',
 				'ui_sidebar_item' => array(
 					'Beranda|fas fa-home|' . site_url('beranda'),
 					'Buku Induk|fas fa-database|' . site_url('bukuinduk'),

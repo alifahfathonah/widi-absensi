@@ -1,9 +1,9 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class MahasiswaModel extends CI_Model {
+class RAmbilKelasModel extends CI_Model {
 
-	public $table = 'mahasiswa';
+	public $table = 'r_ambil_kelas';
 
 	public function show($limit, $offset, $tipe)
 	{
@@ -57,10 +57,35 @@ class MahasiswaModel extends CI_Model {
 	{
 		return $this->db->delete($this->table, array('id' => $id));
 	}
+
+
+	public function join_mahasiswa($limit, $offset, $tipe)
+	{
+		if ($limit >= 0)
+			$this->db->limit($limit);
+		if ($offset >= 0)
+			$this->db->offset($offset);
+
+		$this->db->select('*');
+		$this->db->from($this->table);
+		$this->db->join('mahasiswa', 'r_ambil_kelas.mahasiswa_nim = mahasiswa.nim');
+		$data = $this->db->get();
+		switch (strtolower($tipe)) {
+			case 'array':
+				return $data->result_array();
+				break;
+			case 'object':
+				return $data->result();
+				break;
+			case 'count':
+				return $data->num_rows();
+				break;
+		}
+	}
 	
 
 }
 
-/* End of file MahasiswaModel.php */
-/* Location: ./application/models/MahasiswaModel.php */
+/* End of file RAmbilKelasModel.php */
+/* Location: ./application/models/RAmbilKelasModel.php */
 ?>

@@ -1,9 +1,9 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class MahasiswaModel extends CI_Model {
+class ProgramStudiModel extends CI_Model {
 
-	public $table = 'mahasiswa';
+	public $table = 'program_studi';
 
 	public function show($limit, $offset, $tipe)
 	{
@@ -57,10 +57,12 @@ class MahasiswaModel extends CI_Model {
 	{
 		return $this->db->delete($this->table, array('id' => $id));
 	}
+
+
 	
 
 }
 
-/* End of file MahasiswaModel.php */
-/* Location: ./application/models/MahasiswaModel.php */
+/* End of file ProgramStudiModel.php */
+/* Location: ./application/models/ProgramStudiModel.php */
 ?>

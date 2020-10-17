@@ -1,15 +1,15 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class MahasiswaModel extends CI_Model {
+class AbsensiModel extends CI_Model {
 
-	public $table = 'mahasiswa';
+	public $table = 'absensi';
 
 	public function show($limit, $offset, $tipe)
 	{
-		if ($limit >= 0)
+		if ($limit >= 0) 
 			$this->db->limit($limit);
-		if ($offset >= 0)
+		if ($offset >= 0) 
 			$this->db->offset($offset);
 
 		$data = $this->db->get($this->table);
@@ -61,6 +61,6 @@ class MahasiswaModel extends CI_Model {
 
 }
 
-/* End of file MahasiswaModel.php */
-/* Location: ./application/models/MahasiswaModel.php */
+/* End of file AbsensiModel.php */
+/* Location: ./application/models/AbsensiModel.php */
 ?>
