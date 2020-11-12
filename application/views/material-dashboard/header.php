@@ -191,7 +191,7 @@ The above copyright notice and this permission notice shall be included in all c
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a href="#"><i class="fas fa-user-edit"></i>Edit profil</a></li>
-                                    <li><a href="#"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+                                    <li><a href="<?=site_url('auth/logout')?>"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
                                 </ul>
                             </li>
 

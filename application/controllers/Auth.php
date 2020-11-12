@@ -108,6 +108,13 @@ class Auth extends CI_Controller {
         }
     }
 
+    public function logout()
+    {
+        delete_cookie('logged_username');
+        delete_cookie('logged_role');
+        header('location:' . site_url('auth/login'));
+    }
+
 
 }
 	

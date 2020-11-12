@@ -64,6 +64,7 @@ class Dosen extends CI_Controller {
 			'Beranda|fas fa-tachometer-alt|' . site_url('dosen/'),
 			'Kelas Anda|fas fa-chalkboard-teacher|' . site_url('dosen/kelas'),
 			'Absensi|fas fa-tasks|' . site_url('dosen/absensi'),
+			'Statistik|fas fa-chart-line|' . site_url('dosen/statistik'),
 		);
 	}
 
@@ -72,15 +73,7 @@ class Dosen extends CI_Controller {
 		$logged_username = get_cookie('logged_username');
 		$logged_role = get_cookie('logged_role');
 		// die;
-		if ($logged_role == 'administrator') {
-			$this->load->model('AdminModel');
-			$user_db = $this->AdminModel->single('username', $logged_username, 'object');
-		}
-		else if ($logged_role == 'mahasiswa') {
-			$this->load->model('Mahasiswa');
-			$user_db = $this->MahasiswaModel->single('username', $logged_username, 'object');
-		}
-		else if ($logged_role == 'dosen') {
+		if ($logged_role == 'dosen') {
 			$this->load->model('DosenModel');
 			$user_db = $this->DosenModel->single('username', $logged_username, 'object');
 		}

@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class AdminModel extends CI_Model {
 
-	public $table = 'admin';
+	public $table = 'administrator';
 
 	public function show($limit, $offset, $tipe)
 	{
