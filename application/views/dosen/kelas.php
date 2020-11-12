@@ -6,7 +6,7 @@
             <div class="card-header card-header-image">
                 <img src="<?=site_url('assets/custom/images/classroom.jpg')?>">
                 <div class="card-title" style="line-height: 12px">
-                    <h3 class="mb-0 font-weight-bold">Basis Data 9</h3>
+                    <h3 class="mb-0 font-weight-bold">Filsafat Sains</h3>
                     <span style="font-size: 10pt">Pkl 08.00</span><br/>
                     <span style="font-size: 10pt"><?=$logged_user->gelar_depan?> <?=$logged_user->nama_lengkap?> <?=$logged_user->gelar_belakang?> </span><br/>
                 </div>
@@ -15,7 +15,7 @@
                 <table class="table table-no-padding text-left">
                     <tr>
                         <th>Prodi</th>
-                        <td>: Teknik Informatika</td>
+                        <td>: Filsafat</td>
                     </tr>
                     <tr>
                         <th>Semester</th>
@@ -35,7 +35,7 @@
             <div class="card-header card-header-image">
                 <img src="<?=site_url('assets/custom/images/classroom.jpg')?>">
                 <div class="card-title" style="line-height: 12px">
-                    <h3 class="mb-0 font-weight-bold">Basis Data 9</h3>
+                    <h3 class="mb-0 font-weight-bold">Filsafat Sains</h3>
                     <span style="font-size: 10pt">Pkl 08.00</span><br/>
                     <span style="font-size: 10pt"><?=$logged_user->gelar_depan?> <?=$logged_user->nama_lengkap?> <?=$logged_user->gelar_belakang?> </span><br/>
                 </div>
@@ -44,7 +44,7 @@
                 <table class="table table-no-padding text-left">
                     <tr>
                         <th>Prodi</th>
-                        <td>: Teknik Informatika</td>
+                        <td>: Filsafat</td>
                     </tr>
                     <tr>
                         <th>Semester</th>
@@ -64,7 +64,7 @@
             <div class="card-header card-header-image">
                 <img src="<?=site_url('assets/custom/images/classroom.jpg')?>">
                 <div class="card-title" style="line-height: 12px">
-                    <h3 class="mb-0 font-weight-bold">Basis Data 9</h3>
+                    <h3 class="mb-0 font-weight-bold">Filsafat Sains</h3>
                     <span style="font-size: 10pt">Pkl 08.00</span><br/>
                     <span style="font-size: 10pt"><?=$logged_user->gelar_depan?> <?=$logged_user->nama_lengkap?> <?=$logged_user->gelar_belakang?> </span><br/>
                 </div>
@@ -73,7 +73,7 @@
                 <table class="table table-no-padding text-left">
                     <tr>
                         <th>Prodi</th>
-                        <td>: Teknik Informatika</td>
+                        <td>: Filsafat</td>
                     </tr>
                     <tr>
                         <th>Semester</th>
@@ -93,7 +93,7 @@
             <div class="card-header card-header-image">
                 <img src="<?=site_url('assets/custom/images/classroom.jpg')?>">
                 <div class="card-title" style="line-height: 12px">
-                    <h3 class="mb-0 font-weight-bold">Basis Data 9</h3>
+                    <h3 class="mb-0 font-weight-bold">Filsafat Sains</h3>
                     <span style="font-size: 10pt">Pkl 08.00</span><br/>
                     <span style="font-size: 10pt"><?=$logged_user->gelar_depan?> <?=$logged_user->nama_lengkap?> <?=$logged_user->gelar_belakang?> </span><br/>
                 </div>
@@ -102,7 +102,7 @@
                 <table class="table table-no-padding text-left">
                     <tr>
                         <th>Prodi</th>
-                        <td>: Teknik Informatika</td>
+                        <td>: Filsafat</td>
                     </tr>
                     <tr>
                         <th>Semester</th>
@@ -122,7 +122,7 @@
             <div class="card-header card-header-image">
                 <img src="<?=site_url('assets/custom/images/classroom.jpg')?>">
                 <div class="card-title" style="line-height: 12px">
-                    <h3 class="mb-0 font-weight-bold">Basis Data 9</h3>
+                    <h3 class="mb-0 font-weight-bold">Filsafat Sains</h3>
                     <span style="font-size: 10pt">Pkl 08.00</span><br/>
                     <span style="font-size: 10pt"><?=$logged_user->gelar_depan?> <?=$logged_user->nama_lengkap?> <?=$logged_user->gelar_belakang?> </span><br/>
                 </div>
@@ -131,7 +131,7 @@
                 <table class="table table-no-padding text-left">
                     <tr>
                         <th>Prodi</th>
-                        <td>: Teknik Informatika</td>
+                        <td>: Filsafat</td>
                     </tr>
                     <tr>
                         <th>Semester</th>
@@ -151,7 +151,7 @@
             <div class="card-header card-header-image">
                 <img src="<?=site_url('assets/custom/images/classroom.jpg')?>">
                 <div class="card-title" style="line-height: 12px">
-                    <h3 class="mb-0 font-weight-bold">Basis Data 9</h3>
+                    <h3 class="mb-0 font-weight-bold">Filsafat Sains</h3>
                     <span style="font-size: 10pt">Pkl 08.00</span><br/>
                     <span style="font-size: 10pt"><?=$logged_user->gelar_depan?> <?=$logged_user->nama_lengkap?> <?=$logged_user->gelar_belakang?> </span><br/>
                 </div>
@@ -160,7 +160,7 @@
                 <table class="table table-no-padding text-left">
                     <tr>
                         <th>Prodi</th>
-                        <td>: Teknik Informatika</td>
+                        <td>: Filsafat</td>
                     </tr>
                     <tr>
                         <th>Semester</th>
@@ -180,7 +180,7 @@
             <div class="card-header card-header-image">
                 <img src="<?=site_url('assets/custom/images/classroom.jpg')?>">
                 <div class="card-title" style="line-height: 12px">
-                    <h3 class="mb-0 font-weight-bold">Basis Data 9</h3>
+                    <h3 class="mb-0 font-weight-bold">Filsafat Sains</h3>
                     <span style="font-size: 10pt">Pkl 08.00</span><br/>
                     <span style="font-size: 10pt"><?=$logged_user->gelar_depan?> <?=$logged_user->nama_lengkap?> <?=$logged_user->gelar_belakang?> </span><br/>
                 </div>
@@ -189,7 +189,7 @@
                 <table class="table table-no-padding text-left">
                     <tr>
                         <th>Prodi</th>
-                        <td>: Teknik Informatika</td>
+                        <td>: Filsafat</td>
                     </tr>
                     <tr>
                         <th>Semester</th>
