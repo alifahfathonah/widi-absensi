@@ -84,22 +84,50 @@ class Admin extends CI_Controller {
         }
 	}
 
-	public function data()
+	public function data($jenis_data = FALSE, $mode = FALSE, $submit = FALSE, $id = FALSE)
 	{
-		$data = array(
-			'ui_css' => array(),
-			'ui_title' => 'STIKI E-Learning',
-			'ui_sidebar_item' => $this->sidebar_item,
-			'ui_sidebar_active' => 'Data',
-			'ui_brand' => 'Pusat Data',
-			'ui_nav_item' => array(),
-			'ui_nav_active' => 'Tambah data',
-			'ui_js' => array(),
-		);
+		if ($jenis_data == FALSE) {
+			// --------------------------------------
+			// * Halaman Awal
+			// --------------------------------------
+			$data = array(
+				'ui_css' => array(),
+				'ui_title' => 'STIKI E-Learning',
+				'ui_sidebar_item' => $this->sidebar_item,
+				'ui_sidebar_active' => 'Data',
+				'ui_brand' => 'Pusat Data',
+				'ui_nav_item' => array(),
+				'ui_nav_active' => 'Tambah data',
+				'ui_js' => array(),
+			);
 
-		$data['logged_user'] = $this->cek_login();
+			$data['logged_user'] = $this->cek_login();
 
-		$this->load->view('admin/data/index', $data);	
+			$this->load->view('admin/data/index', $data);	
+		}
+		else if ($jenis_data == 'input_excel') {
+			// --------------------------------------
+			// * Halaman Input data excel
+			// --------------------------------------
+
+			if ($submit != '') {
+				echo "You submitting an excel file";				
+			}
+			else {
+				$data = array(
+					'ui_css' => array(),
+					'ui_title' => 'STIKI E-Learning',
+					'ui_sidebar_item' => $this->sidebar_item,
+					'ui_sidebar_active' => 'Data',
+					'ui_brand' => 'Input data Excel',
+					'ui_nav_item' => array(),
+					'ui_nav_active' => 'Tambah data',
+					'ui_js' => array(),
+				);
+				$data['logged_user'] = $this->cek_login();
+				$this->load->view('admin/data/input_excel', $data);	
+			}
+		}
 	}
 
 
