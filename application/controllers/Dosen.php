@@ -49,12 +49,21 @@ class Dosen extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+
+		// -------------------------------------
+		// Default Navbar untuk e-learning
+		// -------------------------------------
+		// $this->sidebar_item = array(
+		// 	'Beranda|fas fa-tachometer-alt|' . site_url('dosen/'),
+		// 	'Kelas Anda|fas fa-chalkboard-teacher|' . site_url('dosen/kelas'),
+		// 	'Absensi|fas fa-tasks|' . site_url('dosen/absensi'),
+		// 	'Penilaian|fas fa-signature|' . site_url('dosen/penilaian'),
+		// 	'E-Book|fas fa-book|' . site_url('dosen/ebook'),
+		// );
 		$this->sidebar_item = array(
 			'Beranda|fas fa-tachometer-alt|' . site_url('dosen/'),
 			'Kelas Anda|fas fa-chalkboard-teacher|' . site_url('dosen/kelas'),
 			'Absensi|fas fa-tasks|' . site_url('dosen/absensi'),
-			'Penilaian|fas fa-signature|' . site_url('dosen/penilaian'),
-			'E-Book|fas fa-book|' . site_url('dosen/ebook'),
 		);
 	}
 
