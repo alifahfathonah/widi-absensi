@@ -86,6 +86,8 @@ class Admin extends CI_Controller {
 
 	public function data($jenis_data = FALSE, $mode = FALSE, $submit = FALSE, $id = FALSE)
 	{
+		
+
 		if ($jenis_data == FALSE) {
 			// --------------------------------------
 			// * Halaman Awal
@@ -106,25 +108,275 @@ class Admin extends CI_Controller {
 			$this->load->view('admin/data/index', $data);	
 		}
 		else if ($jenis_data == 'input_excel') {
+
+
 			// --------------------------------------
 			// * Halaman Input data excel
 			// --------------------------------------
+			$data = array(
+				'ui_css' => array(),
+				'ui_title' => 'STIKI E-Learning',
+				'ui_sidebar_item' => $this->sidebar_item,
+				'ui_sidebar_active' => 'Data',
+				'ui_brand' => 'Input data Excel',
+				'ui_nav_item' => array(),
+				'ui_nav_active' => 'Tambah data',
+				'ui_js' => array(),
+			);
+			$data['logged_user'] = $this->cek_login();
 
-			if ($submit != '') {
-				echo "You submitting an excel file";				
+
+
+			if ($submit == 'submit') {
+				$this->load->model('ProgramStudiModel');
+				$this->load->model('MataKuliahModel');
+				$this->load->model('DosenModel');
+				$this->load->model('KelasModel');
+				$this->load->model('MahasiswaModel');
+				$this->load->model('RAmbilKelasModel');
+
+				// echo "You submitting an excel file";				
+				if (isset($_FILES['file_absensi']['name'])) {
+					$inputFileName = $_FILES['file_absensi']['tmp_name'];
+					$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
+					$spreadsheetNames = $spreadsheet->getSheetNames();
+
+					$data_spreadsheet = array();
+					for ($activeSpreadsheet=0; $activeSpreadsheet < count($spreadsheetNames); $activeSpreadsheet++) { 
+						$worksheet = $spreadsheet->getSheet($activeSpreadsheet);
+						$cell_a1 = $worksheet->getCell('A1');
+
+						// mata_kuliah | Letak: Nama spreadsheet + A2
+						$data_spreadsheet[$activeSpreadsheet]['mata_kuliah'] = $spreadsheetNames[$activeSpreadsheet];
+						// kelas | Letak: Nama spreadsheet + A2
+						$data_spreadsheet[$activeSpreadsheet]['kelas'] = $spreadsheetNames[$activeSpreadsheet] . ' ' . $worksheet->getCell('A2')->getValue();
+
+						// nama dosen | Letak: C5 
+						$data_spreadsheet[$activeSpreadsheet]['dosen'] = $worksheet->getCell('C5')->getValue();
+
+						// program studi | Letak: A3 
+						$data_spreadsheet[$activeSpreadsheet]['program_studi'] = $worksheet->getCell('A3')->getValue();
+
+
+
+						// Mahasiswa | Letak: looping dari [BCD]8 sampai row tertinggi  Spreadsheet 1 ONLY
+						$highest_row = 	$worksheet->getHighestRow();
+						$data_spreadsheet[$activeSpreadsheet]['mahasiswa'] = array();
+							for ($i=8; $i <= $highest_row; $i++) { 
+								if ($worksheet->getCellByColumnAndRow(3, $i)->getValue() == '') {
+									break;
+								}
+								$data_spreadsheet[$activeSpreadsheet]['mahasiswa'][] = array(
+									'nim' => $worksheet->getCellByColumnAndRow(3, $i)->getValue(), 
+									'nama_lengkap' => ucwords(strtolower($worksheet->getCellByColumnAndRow(2, $i)->getValue())), 
+									'jenis_kelamin' => $worksheet->getCellByColumnAndRow(4, $i)->getValue()
+								);
+							}
+
+					}
+				}
+
+				$data['submitted'] = true;
+				$data['data_spreadsheet'] = $data_spreadsheet;
+				$this->load->view('admin/data/input_excel', $data);	
+			}
+			else if ($submit == 'submit_system') {
+				$data_spreadsheet_json = $this->input->post('data_spreadsheet');
+				$data_spreadsheet = json_decode($data_spreadsheet_json);
+
+
+				$this->load->model('ProgramStudiModel');
+				$this->load->model('MataKuliahModel');
+				$this->load->model('DosenModel');
+				$this->load->model('KelasModel');
+				$this->load->model('MahasiswaModel');
+				$this->load->model('RAmbilKelasModel');
+
+				$data_program_studi = array();
+				$data_mata_kuliah = array();
+				$data_dosen = array();
+				$data_mahasiswa = array();
+				$data_kelas = array();
+
+				$program_studi_id = -1;
+				$mata_kuliah_id = -1;
+				$dosen_id = -1;
+				$kelas_id = -1;
+				
+				foreach ($data_spreadsheet as $spreadsheet) {
+
+
+					// Aturan Pengkondisian input data
+					// * Tidak kosong
+					// * Tidak ada dalam array
+					// * Tidak ada dalam database
+
+					// ------------------------------------------------------
+					// * INSERT DATA PROGRAM STUDI   
+					// Algoritma patuh dengan rule diatas
+					// ------------------------------------------------------
+					if ($spreadsheet->program_studi != '') {
+						if (!in_array($spreadsheet->program_studi, $data_program_studi)) {
+							$data_finding = $this->ProgramStudiModel->single('program_studi', $spreadsheet->program_studi, 'object');
+							if ($data_finding == '') {
+								$data_insert = array(
+									'program_studi' => $spreadsheet->program_studi,
+								);
+								$data_program_studi[] = $data_insert;
+								$query = $this->ProgramStudiModel->insert($data_insert);
+								if ($query) {
+									$program_studi_id = $this->db->insert_id();
+								}
+							}
+							else {
+								// Jika sudah ada di DB, tinggal masukkan insert idnya aja
+								$program_studi_id = $data_finding->id;
+							}
+						}
+					}
+					else {
+						$program_studi_id = -1;
+					}
+					echo "ProgramStudiID:" . $program_studi_id . '<br/>';
+
+					// ------------------------------------------------------
+					// * INSERT DATA MATA KULIAH  
+					// Algoritma patuh dengan rule diatas
+					// ------------------------------------------------------
+					if ($spreadsheet->mata_kuliah != '') {
+						if (!in_array($spreadsheet->mata_kuliah, $data_mata_kuliah)) {
+							$data_finding = $this->MataKuliahModel->single('mata_kuliah', $spreadsheet->mata_kuliah, 'object');
+							if ($data_finding == '') {
+								$data_insert = array(
+									'mata_kuliah' => $spreadsheet->mata_kuliah,
+									'program_studi_id' => $program_studi_id,
+								);
+								$data_mata_kuliah[] = $data_insert;
+								$query = $this->MataKuliahModel->insert($data_insert);
+								if ($query) {
+									$mata_kuliah_id = $this->db->insert_id();
+								}
+							}
+							else {
+								// Jika sudah ada di DB, tinggal masukkan insert idnya aja
+								$mata_kuliah_id = $data_finding->id;
+							}
+						}
+					}
+					else {
+						$mata_kuliah_id = -1;
+					}
+					echo "MataKuliahID:" . $mata_kuliah_id . '<br/>';
+
+
+					// ------------------------------------------------------
+					// * INSERT DATA DOSEN 
+					// Algoritma patuh dengan rule diatas
+					// ------------------------------------------------------
+					if ($spreadsheet->dosen != '') {
+						if (!in_array($spreadsheet->dosen, $data_dosen)) {
+							$data_finding = $this->DosenModel->single('nama_lengkap', $spreadsheet->dosen, 'object');
+							if ($data_finding == '') {
+								$data_insert = array(
+									'nama_lengkap' => ucwords(strtolower($spreadsheet->dosen)),
+								);
+								$data_dosen[] = $data_insert;
+								$query = $this->DosenModel->insert($data_insert);
+								if ($query) {
+									$dosen_id = $this->db->insert_id();
+								}
+							}
+							else {
+								// Jika sudah ada di DB, tinggal masukkan insert idnya aja
+								$dosen_id = $data_finding->id;
+							}
+						}
+					}
+					else {
+						$dosen_id = -1;
+					}
+					echo "DosenID:" . $dosen_id . '<br/>';
+
+					// ------------------------------------------------------
+					// * INSERT DATA KELAS
+					// Algoritma patuh dengan rule diatas
+					// ------------------------------------------------------
+					if ($spreadsheet->kelas != '') {
+						if (!in_array($spreadsheet->kelas, $data_kelas)) {
+							$data_finding = $this->KelasModel->single('nama', $spreadsheet->kelas, 'object');
+							if ($data_finding == '') {
+								$data_insert = array(
+									'nama' => $spreadsheet->kelas,
+									'program_studi_id' => $program_studi_id,
+									'dosen_pengajar_id' => $dosen_id,
+									'mata_kuliah_id' => $mata_kuliah_id,
+									'status_kelas' => 'aktif',
+								);
+								$data_kelas[] = $data_insert;
+								$query = $this->KelasModel->insert($data_insert);
+								if ($query) {
+									$kelas_id = $this->db->insert_id();
+								}
+							}
+							else {
+								// Jika sudah ada di DB, tinggal masukkan insert idnya aja
+								$kelas_id = $data_finding->id;
+							}
+						}
+					}
+					else {
+						$kelas_id = -1;
+					}
+					echo "KelasID:" . $kelas_id . '<br/>';
+
+					
+					foreach ($spreadsheet->mahasiswa as $mahasiswa) {
+						if ($mahasiswa != '') {
+							// ------------------------------------------------------
+							// * INSERT DATA MAHASISWA & R_AMBIL_KELAS
+							// Setiap loop, Algoritma patuh dengan rule diatas
+							// Catatan: Aturan tidak ada dalam array diabaikan, karena masih ada kemungkinan
+							//   		data mahasiswa  
+							// ------------------------------------------------------
+							$mahasiswa_id = -1;
+							$data_finding = $this->MahasiswaModel->single('nim', $mahasiswa->nim, 'object');
+							if ($data_finding == '') {
+								$data_insert = (array) $mahasiswa;
+								$data_mahasiswa[] = $data_insert;
+								$query = $this->MahasiswaModel->insert($data_insert);
+								if ($query) {
+									$mahasiswa_id = $data_insert['nim'];
+								}
+							}
+							else {
+								$mahasiswa_id = $data_finding->nim;
+							}
+
+							$this->db->where('kelas_id', $kelas_id);
+							$data_finding = $this->RAmbilKelasModel->single('mahasiswa_nim', $mahasiswa->nim, 'object');
+							if ($data_finding == '') {
+								$data_insert = array(
+									'mahasiswa_nim' => $mahasiswa_id,
+									'kelas_id' => $kelas_id,
+									'status_persetujuan' => 'diterima',
+									'catatan' => 'Entry ini menggunakan fitur input data excel translation'
+								);
+								$this->RAmbilKelasModel->insert($data_insert);
+							}
+						}
+					}
+
+
+					echo "----------------------------------------------<br/>";
+				}
+				die;
+
+				print_r($data_program_studi);
+				print_r($data_kelas);
+				print_r($data_dosen);
+				print_r($data_mahasiswa);
 			}
 			else {
-				$data = array(
-					'ui_css' => array(),
-					'ui_title' => 'STIKI E-Learning',
-					'ui_sidebar_item' => $this->sidebar_item,
-					'ui_sidebar_active' => 'Data',
-					'ui_brand' => 'Input data Excel',
-					'ui_nav_item' => array(),
-					'ui_nav_active' => 'Tambah data',
-					'ui_js' => array(),
-				);
-				$data['logged_user'] = $this->cek_login();
 				$this->load->view('admin/data/input_excel', $data);	
 			}
 		}
