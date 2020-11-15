@@ -8,7 +8,16 @@
     <script src="<?=site_url('assets/material-dashboard-master')?>/js/core/jquery.min.js"></script>
     <script src="<?=site_url('assets/material-dashboard-master')?>/js/core/popper.min.js"></script>
     <script src="<?=site_url('assets/material-dashboard-master')?>/js/core/bootstrap-material-design.min.js"></script>
+
+
+    <script src="<?=site_url('assets/material-dashboard-master')?>/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <!-- Plugin for the momentJs  -->
+    <script src="<?=site_url('assets/material-dashboard-master')?>/js/plugins/sweetalert2.js"></script>
+    <!-- Forms Validations Plugin -->
+
+
     <script src="<?=site_url('assets/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
+    <script src="<?=site_url('assets/material-dashboard-master')?>/js/material-dashboard.min.js"></script>
     <script src="<?=site_url('assets/custom/js/default.js')?>"></script>
     <!-- ----------------------------------------------------------------------- 
         Section (8) : ui_css        -> untuk sambungan file JS tambahan 

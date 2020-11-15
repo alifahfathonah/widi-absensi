@@ -146,7 +146,7 @@ class Dosen extends CI_Controller {
 			'ui_brand' => 'Absensi',
 			'ui_nav_item' => array(),
 			'ui_nav_active' => 'Tambah data',
-			'ui_js' => array(),
+			'ui_js' => array('jsCookie/js/js.cookie.js'),
 		);
 
 		$data['logged_user'] = $this->cek_login();
@@ -183,192 +183,73 @@ class Dosen extends CI_Controller {
 	}
 
 
-	public function ajax_set_absensi()
+	public function ajax_set_absensi($mode = 'standard')
 	{
-		$mahasiswa_ambil_kelas_id = $this->input->post('mahasiswa_ambil_kelas_id');
-		$tanggal = $this->input->post('tanggal');
-		$absen = $this->input->post('absen');
-		$kelas_id = $this->input->post('kelas_id');
-		$dosen_id = $this->input->post('dosen_id');
+		if ($mode == 'standard') {
+			$mahasiswa_ambil_kelas_id = $this->input->post('mahasiswa_ambil_kelas_id');
+			$tanggal = $this->input->post('tanggal');
+			$absen = $this->input->post('absen');
+			$kelas_id = $this->input->post('kelas_id');
+			$dosen_id = $this->input->post('dosen_id');
 
-		// Cek apakah sudah ada data absensi
-		$this->load->model('AbsensiModel');
-		$this->load->model('RAmbilKelasModel');
-		$this->db->where('tanggal', $tanggal);
-		$absensi = $this->AbsensiModel->single('mahasiswa_ambil_kelas_id', $mahasiswa_ambil_kelas_id, 'object');
+			// Cek apakah sudah ada data absensi
+			$this->load->model('AbsensiModel');
+			$this->load->model('RAmbilKelasModel');
+			$this->db->where('tanggal', $tanggal);
+			$absensi = $this->AbsensiModel->single('mahasiswa_ambil_kelas_id', $mahasiswa_ambil_kelas_id, 'object');
 
-		if ($absensi != '') {
-			// Sudah ada data (maka dilakukan update)
-			$this->AbsensiModel->update(array('absen' => $absen), $absensi->id);
-		}
-		else {
-			$data_insert = array(
-				'kelas_id' => $kelas_id,
-				'dosen_id' => $dosen_id,
-				'mahasiswa_ambil_kelas_id' => $mahasiswa_ambil_kelas_id,
-				'absen' => $absen,
-				'keterangan' => '',
-				'tanggal' => $tanggal,
-				'waktu' => date('H:i:s')
-			);
-			$this->AbsensiModel->insert($data_insert);
-		}
-
-		echo json_encode(array('status' => 'ok'));
-	}
-
-
-	public function ajax_daftar_siswa()
-	{
-		$this->load->model('SiswaModel');
-
-		$data['limit'] = $this->input->get('limit');
-		$data['page'] = $this->input->get('page');
-		$data['offset'] = $data['limit'] * ($data['page'] - 1);
-
-		$this->db->start_cache();
-
-		// Pencarian judul buku
-		$nama = $this->input->get('nama');
-		if ($nama != '') {
-			$this->db->like('nama', $nama, 'BOTH');
-		}
-
-		$this->db->stop_cache();
-
-		$data['data_filtered'] = $this->SiswaModel->show($data['limit'], $data['offset'], 'object');
-		$data['data_filtered_count'] = $this->SiswaModel->show($data['limit'], $data['offset'], 'count');
-		$this->db->flush_cache();
-
-		$this->load->view('siswa/ajax-list', $data);
-
-
-	}
-
-
-
-	public function tambah($submit = FALSE)
-	{
-		$this->load->model('SiswaModel');
-
-		// Jika parameter submit terisi, maka itu lagi ngesubmit data dari form tambah data
-		// Jika enggak ya berarti lagi menampilkan halaman tambah data
-		if ($submit != FALSE) {
-			$data_tambah = array(
-				'nama' => $this->input->post('nama'),
-				'nis' => $this->input->post('nis'),
-				'alamat' => $this->input->post('alamat'),
-			);
-
-
-			$query = $this->SiswaModel->insert($data_tambah);
-			if ($query) {
-				header('location:' . site_url('siswa') . '?notif=oyi&message=Data Berhasil ditambah&type=success&icon=fas fa-check-circle');
+			if ($absensi != '') {
+				// Sudah ada data (maka dilakukan update)
+				$this->AbsensiModel->update(array('absen' => $absen), $absensi->id);
 			}
 			else {
-				header('location:' . site_url('siswa') . '?notif=oyi&message=Data gagal ditambah&type=danger&icon=fas fa-exclamation-triangle');
+				$data_insert = array(
+					'kelas_id' => $kelas_id,
+					'dosen_id' => $dosen_id,
+					'mahasiswa_ambil_kelas_id' => $mahasiswa_ambil_kelas_id,
+					'absen' => $absen,
+					'keterangan' => '',
+					'tanggal' => $tanggal,
+					'waktu' => date('H:i:s')
+				);
+				$this->AbsensiModel->insert($data_insert);
 			}
+
+			echo json_encode(array('status' => 'ok'));
 		}
-		else {
-			$data = array(
-				'ui_css' => array(),
-				'ui_title' => 'STIKI E-Learning',
-				'ui_sidebar_item' => array(
-					'Beranda|fas fa-home|' . site_url('beranda'),
-					'Buku Induk|fas fa-database|' . site_url('bukuinduk'),
-					'Data Siswa|fas fa-users|' . site_url('siswa'),
-					'Peminjaman|fas fa-handshake|' . site_url('peminjaman'),
-					'Laporan|fas fa-clipboard-list|' . site_url('laporan')
-				),
-				'ui_sidebar_active' => 'Data Siswa',
-				'ui_brand' => 'Data Buku Induk',
-				'ui_nav_item' => array(
-					'Tambah data|fas fa-plus-circle|' . site_url('siswa/tambah'),
-				),
-				'ui_nav_active' => 'Tambah data',
-				'ui_js' => array(),
+		else if ($mode == 'update_keterangan') {
+			$this->load->model('AbsensiModel');
+			$id = $this->input->post('id');
+			$data_update = array(
+				'keterangan' => $this->input->post('keterangan')
 			);
 
-			// Userdata login
-			$data['logged_user'] = new stdClass();
-	        $data['logged_user']->nama = 'Badar Wildanie';
-	        $data['logged_user']->avatar = 'assets/custom/images/user/Annotation 2020-04-02 2208172.png';
-
-
-			$this->load->view('siswa/tambah', $data);	
-		}
-	}
-
-	public function edit($nis, $submit = FALSE)
-	{
-        $this->load->model('SiswaModel');
-
-		// Jika parameter submit terisi, maka itu lagi ngesubmit data dari form edit
-		// Jika enggak ya berarti lagi menampilkan halaman edit
-		if ($submit != FALSE) {
-			$data_edit = array(
-				'nama' => $this->input->post('nama'),
-				'nis' => $this->input->post('nis'),
-				'alamat' => $this->input->post('alamat'),
-			);
-
-
-
-			$query = $this->SiswaModel->update($data_edit, $nis);
+			$query = $this->AbsensiModel->update($data_update, $id);
 			if ($query) {
-				header('location:' . site_url('siswa') . '?notif=oyi&message=Data Berhasil diedit&type=success&icon=fas fa-check-circle');
+				echo json_encode(array('status' => 'success'));
 			}
-			else {
-				header('location:' . site_url('siswa') . '?notif=oyi&message=Data gagal diedit&type=danger&icon=fas fa-exclamation-triangle');
-			}
-		}
-		else {
-			$data = array(
-				'ui_css' => array(),
-				'ui_title' => 'STIKI E-Learning',
-				'ui_sidebar_item' => array(
-					'Beranda|fas fa-home|' . site_url('beranda'),
-					'Buku Induk|fas fa-database|' . site_url('bukuinduk'),
-					'Data Siswa|fas fa-users|' . site_url('siswa'),
-					'Peminjaman|fas fa-handshake|' . site_url('peminjaman'),
-					'Laporan|fas fa-clipboard-list|' . site_url('laporan')
-				),
-				'ui_sidebar_active' => 'Data Siswa',
-				'ui_brand' => 'Data Buku Induk',
-				'ui_nav_item' => array(
-					'Tambah data|fas fa-plus-circle|' . site_url('siswa/tambah'),
-				),
-				'ui_nav_active' => '',
-				'ui_js' => array(),
-			);
-
-			// Userdata login
-			$data['logged_user'] = new stdClass();
-	        $data['logged_user']->nama = 'Badar Wildanie';
-	        $data['logged_user']->avatar = 'assets/custom/images/user/Annotation 2020-04-02 2208172.png';
-
-	        // Data buku yang di edit
-	        $data['data_edit'] = $this->SiswaModel->single('nis', $nis, 'object');
-
-			$this->load->view('siswa/edit', $data);	
 		}
 	}
 
-	public function delete($id)
+	public function ajax_read_kelas($mode)
 	{
-		$this->load->model('SiswaModel');
-		$query = $this->SiswaModel->delete($id);
-		if ($query) {
-			header('location:' . site_url('siswa') . '?notif=oyi&message=Data Berhasil dihapus&type=success&icon=fas fa-check-circle');
-		}
-		else {
-			header('location:' . site_url('siswa') . '?notif=oyi&message=Data gagal dihapus&type=danger&icon=fas fa-exclamation-triangle');
-		}
+		$this->load->model('KelasModel');
+		$this->load->model('ProgramStudiModel');
+		if ($mode == 'single') {
+			$id = $this->input->get('id');
+			$data['kelas'] = $this->KelasModel->single('id', $id, 'array');
+			if ($data['kelas'] != '') {
+				$data['status'] = 'success';
+				$program_studi = $this->ProgramStudiModel->single('id', $data['kelas']['program_studi_id'], 'object');
+				if ($program_studi != '') {
+					$data['kelas']['program_studi'] = $program_studi->program_studi;
+				}
+			}
 
+			echo json_encode($data);
+		}
 	}
-
 }
-	
 /* End of file Dosen.php */
 /* Location: ./application/controllers/Dosen.php */
 ?>

@@ -70,10 +70,11 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th style="min-width: 200px">Nama Lengkap</th>
-                                <th>Jenis Kelamin</th>
-                                <th>TTL</th>
-                                <th>Absensi</th>
+                                <th>#</th>
+                                <th style="min-width: 150px">Nama Lengkap</th>
+                                <th class="d-none d-sm-block">TTL</th>
+                                <th style="min-width: 170px">Absensi</th>
+                                <th>Keterangan</th>
                             </tr>
                         </thead>
                         <tbody id="load-absensi">
@@ -89,6 +90,7 @@
 </div>
 
 
+
 <?php $this->view('material-dashboard/js_script')?>
 
 
@@ -97,7 +99,13 @@
         limit: -1,
         page: 1,
         kelas: -1,
-        tanggal: '2020-10-17'
+        tanggal: '<?=date('Y-m-d')?>'
+    }
+
+    if (Cookies.get('dosen_absensi_kelas_id') != '') {
+        absensi.kelas = Cookies.get('dosen_absensi_kelas_id');
+        update_kelas(absensi.kelas);
+        refresh_absensi();
     }
     function refresh_absensi() {
         $.ajax({
@@ -142,6 +150,82 @@
                 }
             });
         });
+        $(".btn-tambah-keterangan").popover({
+            trigger: 'click',
+            placement: 'left',
+            html: true,
+            content: `
+                <textarea class="absensi-keterangan form-control"></textarea>
+            `,
+            title: 'Tuliskan keterangan',
+            template: `<div class="popover" role="tooltip" style='width: 200px'><a class='popover-close' href='#' style='position: absolute;top: 4px;right: 14px;'><i class='fas fa-times'></i></a><div class="arrow"></div><h3 class="popover-header pt-1" style='font-size: 11pt; font-weight: bold; border-bottom: 1px solid #ddd;'></h3><div class="popover-body p-1"></div><div class='text-center'><input type='button' class='btn btn-warning btn-tambah-keterangan-submit btn-sm m-1' value='Kirim' /></div></div>`
+        })
+        .on('shown.bs.popover', function() {
+            $this = $(this);
+            $('.popover-close').click(function(e) {
+                e.preventDefault();
+                $this.popover('hide');
+            });
+            $('.absensi-keterangan').focus();
+
+            $('.btn-tambah-keterangan-submit').click(function(e) {
+                keterangan = $(".popover .absensi-keterangan").val();
+                $.ajax({
+                    url: '<?=site_url('dosen/ajax_set_absensi/update_keterangan')?>',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        keterangan: keterangan,
+                        id: $this.data('id')
+                    },
+                })
+                .done(function(data) {
+                    $this.popover('hide');
+                    refresh_absensi();
+                });
+            });
+        })
+
+
+
+        $(".btn-edit-keterangan").popover({
+            trigger: 'click',
+            placement: 'left',
+            html: true,
+            content: `
+                <textarea class="absensi-keterangan form-control"></textarea>
+            `,
+            title: 'Tuliskan keterangan',
+            template: `<div class="popover" role="tooltip" style='width: 200px'><a class='popover-close' href='#' style='position: absolute;top: 4px;right: 14px;'><i class='fas fa-times'></i></a><div class="arrow"></div><h3 class="popover-header pt-1" style='font-size: 11pt; font-weight: bold; border-bottom: 1px solid #ddd;'></h3><div class="popover-body p-1"></div><div class='text-center'><input type='button' class='btn btn-warning btn-edit-keterangan-submit btn-sm m-1' value='Kirim' /></div></div>`
+        })
+        .on('shown.bs.popover', function() {
+            $this = $(this);
+            $('.popover-close').click(function(e) {
+                e.preventDefault();
+                $this.popover('hide');
+            });
+
+            $('.absensi-keterangan').val($this.data('keterangan'));
+            $('.absensi-keterangan').focus();
+            $('.absensi-keterangan').select();
+
+            $('.btn-edit-keterangan-submit').click(function(e) {
+                keterangan = $(".popover .absensi-keterangan").val();
+                $.ajax({
+                    url: '<?=site_url('dosen/ajax_set_absensi/update_keterangan')?>',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        keterangan: keterangan,
+                        id: $this.data('id')
+                    },
+                })
+                .done(function(data) {
+                    $this.popover('hide');
+                    refresh_absensi();
+                });
+            });
+        })
     }
 
 
@@ -167,18 +251,33 @@
             refresh_absensi();
     });
 
+    function update_kelas(id) {
+        $.ajax({
+            url: '<?=site_url('dosen/ajax_read_kelas/single')?>',
+            type: 'GET',
+            dataType: 'json',
+            data: {id: id},
+        })
+        .done(function(data) {
+            if (data.status == 'success') {
+                $('.fill-nama').html((data.kelas.nama != null) ? data.kelas.nama : '-');
+                $('.fill-waktu').html((data.kelas.waktu != null) ? data.kelas.waktu : '-');
+                $('.fill-program_studi').html((data.kelas.program_studi != null) ? data.kelas.program_studi : '-');
+                $('.fill-semester').html((data.kelas.semester != null) ? data.kelas.semester : '-');
+            }
+        });
+    }
     $(document).on('shown.bs.modal', '#modal-pilih-kelas', function(e) {
         $('.btn-pilih-kelas').click(function(e) {
             id = $(this).data('id');
             absensi.kelas = id;
+            Cookies.set('dosen_absensi_kelas_id', id, {expires: 7})
             if (absensi.kelas != -1) 
                 refresh_absensi();
-
-            $('.fill-nama').html($('.fill-from-nama').html());
-            $('.fill-waktu').html($('.fill-from-waktu').html());
-            $('.fill-program_studi').html($('.fill-from-program_studi').html());
-            $('.fill-semester').html($('.fill-from-semester').html());
+            update_kelas(id);
+            
             $('#modal-pilih-kelas').modal('hide');
+            
         });
     });
 </script>
@@ -196,13 +295,19 @@
                         foreach ($data_kelas as $kelas) {
                             $program_studi = $this->ProgramStudiModel->single('id', $kelas->program_studi_id, 'object');
                     ?>
-                    <div class="col-sm-6 col-md-4">
+                    <div class="col-sm-6 col-xl-6">
                         <div class="card card-blog">
                             <div class="card-header card-header-image">
                                 <img src="<?=site_url('assets/custom/images/classroom.jpg')?>">
                                 <div class="card-title" style="line-height: 12px">
                                     <h4 class="mb-0 font-weight-bold fill-from-nama"><?=$kelas->nama?></h4>
+                                    <?php 
+                                        if ($kelas->hari != '') {
+                                    ?>
                                     <span style="font-size: 10pt" class="fill-from-waktu"><?=$kelas->hari?>,    Pkl <?=date('H.i', strtotime($kelas->waktu))?></span><br/>
+                                    <?php 
+                                        }
+                                    ?>
                                     <span style="font-size: 10pt"><?=$logged_user->gelar_depan?> <?=$logged_user->nama_lengkap?> <?=$logged_user->gelar_belakang?> </span><br/>
                                 </div>
                             </div>
@@ -213,8 +318,8 @@
                                         <td class="fill-from-program_studi">: <?=(($program_studi != '') ? $program_studi->program_studi : 'Tidak ada data')?></td>
                                     </tr>
                                     <tr>
-                                        <th class="fill-from-semester">Semester</th>
-                                        <td>: <?=$kelas->semester?></td>
+                                        <th>Semester</th>
+                                        <td class="fill-from-semester">: <?=(($kelas->semester != '') ? $kelas->semester : '---')?></td>
                                     </tr>
                                 </table>
                                 <a href="javascript:void(0)" data-id='<?=$kelas->id?>' class="btn btn-warning btn-pilih-kelas">Pilih kelas</a>
