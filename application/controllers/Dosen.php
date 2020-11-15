@@ -131,8 +131,36 @@ class Dosen extends CI_Controller {
 		);
 
 		$data['logged_user'] = $this->cek_login();
+
+		$this->load->model('KelasModel');
+		$this->load->model('ProgramStudiModel');
+		$this->load->model('MahasiswaModel');
+		$this->load->model('RAmbilKelasModel');
+
+		$this->db->where('dosen_pengajar_id', $data['logged_user']->id);
+		$data['data_kelas'] = $this->KelasModel->show(-1, -1, 'OBJECT');
         
-		$this->load->view('dosen/kelas', $data);	
+		$this->load->view('dosen/kelas/kelas', $data);	
+	}
+
+
+	public function ajax_read_kelas_mahasiswa($mode)
+	{
+		$this->load->model('RAmbilKelasModel');
+		$this->load->model('AbsensiModel');
+
+		$this->db->start_cache();
+		$this->db->stop_cache();
+
+		$this->db->order_by('nama_lengkap', 'asc');
+		$this->db->where('kelas_id', $this->input->get('kelas'));
+
+		$data['tanggal'] = $this->input->get('tanggal');  // Untuk query where absensi
+		$data['data_filtered'] = $this->RAmbilKelasModel->join_mahasiswa(-1, -1, 'object');
+		$data['data_filtered_count'] = $this->RAmbilKelasModel->join_mahasiswa(-1, -1, 'count');
+		$this->db->flush_cache();
+
+		$this->load->view('dosen/kelas/ajax_daftar_mahasiswa', $data);
 	}
 
 
