@@ -106,11 +106,46 @@ class Dosen extends CI_Controller {
 			'ui_brand' => 'Beranda',
 			'ui_nav_item' => array(),
 			'ui_nav_active' => 'Tambah data',
-			'ui_js' => array(),
+			'ui_js' => array('chartjs/chart.min.js'),
 		);
 
 		$data['logged_user'] = $this->cek_login();
-        
+        $this->load->model('KelasModel');
+        $this->load->model('RAmbilKelasModel');
+        $this->load->model('AbsensiModel');
+
+
+        $this->db->where('dosen_pengajar_id', $data['logged_user']->id);
+        $data['data_kelas'] = $this->KelasModel->show(-1, -1, 'object');
+        foreach ($data['data_kelas'] as $kelas) {
+	        $this->db->or_where('kelas_id', $kelas->id);
+        }
+
+        $this->db->distinct();
+        $this->db->select('mahasiswa_nim');
+
+        $data['jumlah_murid'] = $this->RAmbilKelasModel->show(-1, -1, 'count');
+        $data['jumlah_kelas'] = count($data['data_kelas']);
+
+        $this->db->distinct();
+        $this->db->where('dosen_pengajar_id', $data['logged_user']->id);
+        $data['jumlah_mk'] = $this->KelasModel->show(-1, -1, 'count');
+
+        $this->db->where('tanggal', date('Y-m-d'));
+        $this->db->where('absen', 'h');
+        $data['jumlah_hadir'] = $this->AbsensiModel->show(-1, -1, 'count');
+
+        $this->db->where('tanggal', date('Y-m-d'));
+        $this->db->where('absen', 'i');
+        $data['jumlah_ijin'] = $this->AbsensiModel->show(-1, -1, 'count');
+
+        $this->db->where('tanggal', date('Y-m-d'));
+        $this->db->where('absen', 's');
+        $data['jumlah_sakit'] = $this->AbsensiModel->show(-1, -1, 'count');
+
+        $this->db->where('tanggal', date('Y-m-d'));
+        $this->db->where('absen', 'a');
+        $data['jumlah_alpha'] = $this->AbsensiModel->show(-1, -1, 'count');
 		$this->load->view('dosen/beranda', $data);	
 	}
 
@@ -276,6 +311,26 @@ class Dosen extends CI_Controller {
 
 			echo json_encode($data);
 		}
+	}
+
+
+	public function statistik()
+	{
+		$data = array(
+			'ui_css' => array(),
+			'ui_title' => 'STIKI E-Learning',
+			'ui_sidebar_item' => $this->sidebar_item,
+			'ui_sidebar_active' => 'Statistik',
+			'ui_brand' => 'Statistik',
+			'ui_nav_item' => array(),
+			'ui_nav_active' => '',
+			'ui_js' => array('chartjs/chart.min.js'),
+		);
+
+		$this->load->model('AbsensiModel');
+		$data['logged_user'] = $this->cek_login();
+        
+		$this->load->view('dosen/statistik/index', $data);	
 	}
 }
 /* End of file Dosen.php */
