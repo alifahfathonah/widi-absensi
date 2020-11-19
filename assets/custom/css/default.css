@@ -71,3 +71,18 @@
         padding: 0 !important;
     }
 }
+
+
+
+.table-laporan th, .table-laporan td, .table-xs th, .table-xs td {
+    font-size: 12pt;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+
+@media print {
+    .content {
+        margin-top: 0 !important;
+    }
+}

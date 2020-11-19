@@ -117,7 +117,9 @@ class Dosen extends CI_Controller {
 
         $this->db->where('dosen_pengajar_id', $data['logged_user']->id);
         $data['data_kelas'] = $this->KelasModel->show(-1, -1, 'object');
+        $data['data_kelas_id'] = array();
         foreach ($data['data_kelas'] as $kelas) {
+        	$data['data_kelas_id'][] = $kelas->id;
 	        $this->db->or_where('kelas_id', $kelas->id);
         }
 
@@ -133,18 +135,22 @@ class Dosen extends CI_Controller {
 
         $this->db->where('tanggal', date('Y-m-d'));
         $this->db->where('absen', 'h');
+        $this->db->where_in('kelas_id', $data['data_kelas_id']);
         $data['jumlah_hadir'] = $this->AbsensiModel->show(-1, -1, 'count');
 
         $this->db->where('tanggal', date('Y-m-d'));
         $this->db->where('absen', 'i');
+        $this->db->where_in('kelas_id', $data['data_kelas_id']);
         $data['jumlah_ijin'] = $this->AbsensiModel->show(-1, -1, 'count');
 
         $this->db->where('tanggal', date('Y-m-d'));
         $this->db->where('absen', 's');
+        $this->db->where_in('kelas_id', $data['data_kelas_id']);
         $data['jumlah_sakit'] = $this->AbsensiModel->show(-1, -1, 'count');
 
         $this->db->where('tanggal', date('Y-m-d'));
         $this->db->where('absen', 'a');
+        $this->db->where_in('kelas_id', $data['data_kelas_id']);
         $data['jumlah_alpha'] = $this->AbsensiModel->show(-1, -1, 'count');
 		$this->load->view('dosen/beranda', $data);	
 	}

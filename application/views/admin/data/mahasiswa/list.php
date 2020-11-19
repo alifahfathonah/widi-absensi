@@ -4,15 +4,15 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="form-group col-2 col-md-1">
+            <div class="col-2 col-md-1">
                 <label>Halaman</label>
                 <input type="number" id="filter-page" value="1" min="1" class="form-control">
             </div>
-            <div class="form-group col-2 col-md-1">
+            <div class="col-2 col-md-1">
                 <label>Item/Page</label>
                 <input type="number" id="filter-limit" value="10" min="10" class="form-control">
             </div>
-            <div class="form-group col-8 col-md-10">
+            <div class="col-8 col-md-10">
                 <label>Cari nama siswa</label>
                 <div class="input-group">
                     <input type="text" id="filter-nama" class="form-control">
@@ -32,11 +32,15 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th style="width: 50px">#</th>
-                            <th style="width: 50px"></th>
-                            <th>nama</th>
-                            <th>nis</th>
-                            <th>alamat</th>
+                            <th style="width: 10px">#</th>
+                            <th style="width: 85px"></th>
+                            <th>NIM</th>
+                            <th>Nama</th>
+                            <th>TTL</th>
+                            <th>Username</th>
+                            <th>Warga Negara</th>
+                            <th>No HP   </th>
+                            <th>E-mail</th>
                         </tr>
                     </thead>
                     <tbody id="mahasiswa-load">
@@ -72,7 +76,7 @@
     ?>
 
 
-    var siswaFilter = {
+    var mahasiswaParams = {
         limit: 10,
         page: 1,
     }
@@ -80,42 +84,51 @@
     $("#filter-page").on('input', function(e) {
         value = $(this).val();
         if (value != '') {
-            siswaFilter.page = value;
+            mahasiswaParams.page = value;
         }    
         else {
             $(this).val(1)
-            delete siswaFilter.page;
+            delete mahasiswaParams.page;
         }
-        refresh_siswa()
+        refresh_mahasiswa()
     })
     $("#filter-limit").on('input', function(e) {
         value = $(this).val();
         if (value != '') {
-            siswaFilter.limit = value;
+            mahasiswaParams.limit = value;
         }    
         else {
             $(this).val(10)
-            siswaFilter.limit = 10;
+            mahasiswaParams.limit = 10;
         }
-        refresh_siswa()
+        refresh_mahasiswa()
+    })
+    $("#filter-nama").on('input', function(e) {
+        value = $(this).val();
+        if (value != '') {
+            mahasiswaParams.nama_lengkap = value;
+        }    
+        else {
+            delete mahasiswaParams.nama_lengkap
+        }
+        refresh_mahasiswa()
     })
 
-    function refresh_siswa() {
+    function refresh_mahasiswa() {
         $.ajax({
-            url: '<?=site_url('siswa/ajax_daftar_siswa')?>',
+            url: '<?=site_url('admin/ajax_read_mahasiswa/list/list')?>',
             type: 'GET',
             dataType: 'html',
-            data: siswaFilter,
+            data: mahasiswaParams,
         })
         .done(function(data) {
             $.getScript('<?=site_url('assets/custom/js/default.js')?>')
             if (data != '') {
-                $('#siswa-load').html(data)
-
+                $('#mahasiswa-load').html(data)
                 eventSetelahLoad();
             }
             else {
-                $('#siswa-load').html(`<tr><td colspan='99' class='text-center'>Tidak ada data</td></tr>`);
+                $('#mahasiswa-load').html(`<tr><td colspan='99' class='text-center'>Tidak ada data</td></tr>`);
             }
         })
     }
@@ -128,7 +141,7 @@
         });
     }
 
-    refresh_siswa()
+    refresh_mahasiswa()
    
 </script>
 <?php $this->view('material-dashboard/footer')?>

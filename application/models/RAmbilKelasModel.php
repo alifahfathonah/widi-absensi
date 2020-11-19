@@ -66,6 +66,7 @@ class RAmbilKelasModel extends CI_Model {
 		if ($offset >= 0)
 			$this->db->offset($offset);
 
+		$this->db->distinct();
 		$this->db->select('*');
 		$this->db->from($this->table);
 		$this->db->join('mahasiswa', 'r_ambil_kelas.mahasiswa_nim = mahasiswa.nim');

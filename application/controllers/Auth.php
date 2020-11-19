@@ -112,6 +112,7 @@ class Auth extends CI_Controller {
     {
         delete_cookie('logged_username');
         delete_cookie('logged_role');
+        delete_cookie('dosen_absensi_kelas_id');
         header('location:' . site_url('auth/login'));
     }
 

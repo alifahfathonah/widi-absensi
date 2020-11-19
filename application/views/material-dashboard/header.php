@@ -113,7 +113,7 @@ The above copyright notice and this permission notice shall be included in all c
         </div>
         <div class="main-panel">
             <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+            <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top d-print-none">
                 <div class="container-fluid">
                     <div class="navbar-wrapper">
                         <!-- ---------------------------------------------------------- 

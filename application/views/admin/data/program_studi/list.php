@@ -27,23 +27,21 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <h4 class="card-header">Data Dosen</h4>
+            <h4 class="card-header">Data Mahasiswa</h4>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th style="width: 10px">#</th>
                             <th style="width: 85px"></th>
-                            <th>NIDN/NIP</th>
-                            <th>Nama Lengkap</th>
-                            <th>TTL</th>
-                            <th>Username</th>
-                            <th>No KTP</th>
-                            <th>No HP   </th>
-                            <th>E-mail</th>
+                            <th>program_studi</th>
+                            <th>gelar_akademik</th>
+                            <th>sks_lulus</th>
+                            <th>status_prodi</th>
+                            <th>tanggal_berdiri</th>
                         </tr>
                     </thead>
-                    <tbody id="dosen-load">
+                    <tbody id="prodi-load">
                         
                     </tbody>
                 </table>
@@ -76,7 +74,7 @@
     ?>
 
 
-    var dosenParams = {
+    var prodiParams = {
         limit: 10,
         page: 1,
     }
@@ -84,51 +82,51 @@
     $("#filter-page").on('input', function(e) {
         value = $(this).val();
         if (value != '') {
-            dosenParams.page = value;
+            prodiParams.page = value;
         }    
         else {
             $(this).val(1)
-            delete dosenParams.page;
+            delete prodiParams.page;
         }
-        refresh_dosen()
+        refresh_prodi()
     })
     $("#filter-limit").on('input', function(e) {
         value = $(this).val();
         if (value != '') {
-            dosenParams.limit = value;
+            prodiParams.limit = value;
         }    
         else {
             $(this).val(10)
-            dosenParams.limit = 10;
+            prodiParams.limit = 10;
         }
-        refresh_dosen()
+        refresh_prodi()
     })
     $("#filter-nama").on('input', function(e) {
         value = $(this).val();
         if (value != '') {
-            dosenParams.nama_lengkap = value;
+            prodiParams.program_studi = value;
         }    
         else {
-            delete dosenParams.nama_lengkap
+            delete prodiParams.program_studi
         }
-        refresh_dosen()
+        refresh_prodi()
     })
 
-    function refresh_dosen() {
+    function refresh_prodi() {
         $.ajax({
-            url: '<?=site_url('admin/ajax_read_dosen/list/list')?>',
+            url: '<?=site_url('admin/ajax_read_program_studi/list/list')?>',
             type: 'GET',
             dataType: 'html',
-            data: dosenParams,
+            data: prodiParams,
         })
         .done(function(data) {
             $.getScript('<?=site_url('assets/custom/js/default.js')?>')
             if (data != '') {
-                $('#dosen-load').html(data)
+                $('#prodi-load').html(data)
                 eventSetelahLoad();
             }
             else {
-                $('#dosen-load').html(`<tr><td colspan='99' class='text-center'>Tidak ada data</td></tr>`);
+                $('#prodi-load').html(`<tr><td colspan='99' class='text-center'>Tidak ada data</td></tr>`);
             }
         })
     }
@@ -141,7 +139,7 @@
         });
     }
 
-    refresh_dosen()
+    refresh_prodi()
    
 </script>
 <?php $this->view('material-dashboard/footer')?>

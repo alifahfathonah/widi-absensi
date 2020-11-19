@@ -3,27 +3,23 @@
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
-                <div class="row">
+                <div class="form-row">
                     <div class="col">
-                        <div class="form-group">
-                            <label>Pilih Kelas</label>
-                            <button type="button" data-toggle='modal' data-target='#modal-pilih-kelas' class="btn btn-warning btn-block">
-                                <i class="fas fa-chalkboard-teacher fa-lg" style="position: relative; top: 2px; margin-right: 8px"></i>
-                                Pilih Kelas
-                            </button>
-                        </div>
+                        <label>Pilih Kelas</label>
+                        <button type="button" data-toggle='modal' data-target='#modal-pilih-kelas' class="btn btn-warning btn-block">
+                            <i class="fas fa-chalkboard-teacher fa-lg" style="position: relative; top: 2px; margin-right: 8px"></i>
+                            Pilih Kelas
+                        </button>
                     </div>
                     <div class="col">
-                        <div class="form-group">
-                            <label>Tanggal</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-calendar"></i>
-                                    </span>
-                                </div>
-                                <input type="date" id="filter-tanggal" name="tanggal" value="<?=date('Y-m-d')?>" class="form-control">
+                        <label>Tanggal</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fas fa-calendar"></i>
+                                </span>
                             </div>
+                            <input type="date" id="filter-tanggal" name="tanggal" value="<?=date('Y-m-d')?>" class="form-control">
                         </div>
                     </div>
                 </div>

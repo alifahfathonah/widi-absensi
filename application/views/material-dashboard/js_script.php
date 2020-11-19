@@ -10,7 +10,6 @@
     <script src="<?=site_url('assets/material-dashboard-master')?>/js/core/bootstrap-material-design.min.js"></script>
 
 
-    <script src="<?=site_url('assets/material-dashboard-master')?>/js/plugins/perfect-scrollbar.jquery.min.js"></script>
     <!-- Plugin for the momentJs  -->
     <script src="<?=site_url('assets/material-dashboard-master')?>/js/plugins/sweetalert2.js"></script>
     <!-- Forms Validations Plugin -->

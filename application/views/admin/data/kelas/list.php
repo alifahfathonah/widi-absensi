@@ -10,10 +10,10 @@
             </div>
             <div class="col-2 col-md-1">
                 <label>Item/Page</label>
-                <input type="number" id="filter-limit" value="10" min="10" class="form-control">
+                <input type="number" id="filter-limit" value="50" min="10" class="form-control">
             </div>
             <div class="col-8 col-md-10">
-                <label>Cari nama siswa</label>
+                <label>Cari nama kelas</label>
                 <div class="input-group">
                     <input type="text" id="filter-nama" class="form-control">
                     <div class="input-group-btn">
@@ -27,26 +27,33 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <h4 class="card-header">Data Dosen</h4>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th style="width: 10px">#</th>
-                            <th style="width: 85px"></th>
-                            <th>NIDN/NIP</th>
-                            <th>Nama Lengkap</th>
-                            <th>TTL</th>
-                            <th>Username</th>
-                            <th>No KTP</th>
-                            <th>No HP   </th>
-                            <th>E-mail</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dosen-load">
-                        
-                    </tbody>
-                </table>
+            <div class="card-header">
+                <h4 class="card-title mb-0">Data Kelas</h4>
+                <p class="cart-category font-italic">Klik tombol info kelas untuk melihat detail atau menambah anggota.</p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th style="width: 50px"></th>
+                                <th>nama</th>
+                                <th>program_studi_id</th>
+                                <th>dosen_pengajar_id</th>
+                                <th>mata_kuliah_id</th>
+                                <th>Jumlah Anggota</th>
+                                <th>hari</th>
+                                <th>waktu</th>
+                                <th>semester</th>
+                                <th>status_kelas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kelas-load">
+                            
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div> <!-- end col-12 -->
@@ -76,59 +83,59 @@
     ?>
 
 
-    var dosenParams = {
-        limit: 10,
+    var kelasParams = {
+        limit: 50,
         page: 1,
     }
 
     $("#filter-page").on('input', function(e) {
         value = $(this).val();
         if (value != '') {
-            dosenParams.page = value;
+            kelasParams.page = value;
         }    
         else {
             $(this).val(1)
-            delete dosenParams.page;
+            delete kelasParams.page;
         }
-        refresh_dosen()
+        refresh_kelas()
     })
     $("#filter-limit").on('input', function(e) {
         value = $(this).val();
         if (value != '') {
-            dosenParams.limit = value;
+            kelasParams.limit = value;
         }    
         else {
             $(this).val(10)
-            dosenParams.limit = 10;
+            kelasParams.limit = 10;
         }
-        refresh_dosen()
+        refresh_kelas()
     })
     $("#filter-nama").on('input', function(e) {
         value = $(this).val();
         if (value != '') {
-            dosenParams.nama_lengkap = value;
+            kelasParams.nama = value;
         }    
         else {
-            delete dosenParams.nama_lengkap
+            delete kelasParams.nama
         }
-        refresh_dosen()
+        refresh_kelas()
     })
 
-    function refresh_dosen() {
+    function refresh_kelas() {
         $.ajax({
-            url: '<?=site_url('admin/ajax_read_dosen/list/list')?>',
+            url: '<?=site_url('admin/ajax_read_kelas/list/list')?>',
             type: 'GET',
             dataType: 'html',
-            data: dosenParams,
+            data: kelasParams,
         })
         .done(function(data) {
             $.getScript('<?=site_url('assets/custom/js/default.js')?>')
             if (data != '') {
-                $('#dosen-load').html(data)
+                $('#kelas-load').html(data)
                 eventSetelahLoad();
             }
             else {
-                $('#dosen-load').html(`<tr><td colspan='99' class='text-center'>Tidak ada data</td></tr>`);
+                $('#kelas-load').html(`<tr><td colspan='99' class='text-center'>Tidak ada data</td></tr>`);
             }
         })
     }
@@ -141,7 +148,7 @@
         });
     }
 
-    refresh_dosen()
+    refresh_kelas()
    
 </script>
 <?php $this->view('material-dashboard/footer')?>
